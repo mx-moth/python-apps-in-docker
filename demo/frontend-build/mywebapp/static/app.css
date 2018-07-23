@@ -1,0 +1,12 @@
+html {
+	background-color: #eee;
+}
+body {
+	font-family: sans-serif;
+	max-width: 100ch;
+	margin: 1em auto;
+	padding: 1em;
+	background-color: white;
+	border-radius: 1em;
+	box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.3);
+}

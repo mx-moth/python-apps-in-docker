@@ -1,0 +1,24 @@
+version: '2.3'
+
+services:
+
+    backend:
+        build: .
+        init: true
+        command: ./manage.py runserver 0.0.0.0:8000
+        ports:
+            - '80:8000'
+        volumes:
+            - '.:/opt/my-web-app'
+        environment:
+            - 'DJANGO_SETTINGS_MODULE=develop.settings'
+        depends_on:
+            - database
+
+    database:
+        image: postgres
+
+    mail:
+        image: djfarrelly/maildev
+        ports:
+            - "9000:80"
