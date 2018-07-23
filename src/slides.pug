@@ -364,6 +364,33 @@ section.slide.slide__big
 				| github.com/timheap/python-apps-in-docker
 
 
+section.slide.slide__title
+	h1
+		| 🐍
+		br
+		| Extras
+
+
+section.slide.slide__big
+	header.slide--header: h1 Frontend builder
+	.slide--body
+		ul
+			li.bullet Frontend assets compiled using node build chain
+			li.bullet Watch and compile files in development
+			li.bullet Build and include assets in the backend container
+			li.bullet Build tools not included final container
+		.fin.bullet
+
+
+section.slide.slide__big
+	header.slide--header: h1 Celery tasks
+	.slide--body
+		ul
+			li.bullet Runs tasks in a separate container to web application
+			li.bullet Can reuse backend Dockerfile to reuse code
+			li.bullet Run broker through Docker in development
+		.fin.bullet
+
 
 section.slide
 	header.slide--header: h1 Links
