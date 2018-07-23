@@ -1,4 +1,20 @@
-FROM python:3.7-stretch
+# Frontend asset builder
+FROM node:8-stretch as frontend
+
+WORKDIR /opt/frontend
+COPY package.json yarn.lock /opt/frontend/
+
+RUN yarn && \
+	yarn cache clean && \
+	true
+
+COPY ./design/ /opt/frontend/design/
+
+RUN yarn run build
+CMD ["yarn", "run", "watch"]
+
+# Backend application
+FROM python:3.7-stretch AS backend
 
 WORKDIR /opt/my-web-app/
 
@@ -16,6 +32,7 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt \
 COPY ./mywebapp /opt/my-web-app/mywebapp
 COPY ./deploy /opt/my-web-app/deploy
 COPY ./manage.py /opt/my-web-app/manage.py
+COPY --from=frontend /opt/frontend/static /opt/my-web-app/mywebapp/static
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=UTF-8 \

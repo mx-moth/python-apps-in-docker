@@ -1,0 +1,64 @@
+{
+    "name": "python-apps-in-docker-example-frontend",
+    "version": "1.0.0",
+    "description": "Frontend build and watcher setup for this demo",
+    "license": "BSD-3-Clause",
+    "author": "Tim Heap",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:timheap/python-apps-in-docker"
+    },
+    "scripts": {
+        "clean": "rimraf $npm_package_config_static/*",
+        "makedirs": "mkdir -p $npm_package_config_static/css",
+        "prebuild": "npm-run-all clean makedirs",
+        "build": "npm-run-all --parallel build:*",
+        "build:css": "npm-run-all build:css:compile build:css:postcss",
+        "build:css:compile": "node-sass --include-path node_modules $npm_package_config_design/scss --output $npm_package_config_static/css",
+        "build:css:postcss": "postcss $npm_package_config_static/css/*.css --dir $npm_package_config_static/css/",
+        "prewatch": "npm-run-all makedirs",
+        "watch": "npm-run-all --parallel watch:*",
+        "watch:css": "onchange -iw $npm_package_config_design/scss/** -- npm-run-all build:css"
+    },
+    "config": {
+        "browserifytransform": " -t [ eslintify --quiet-ignored true ] -t [ babelify ] ",
+        "watchifytransform": " -t [ eslintify --quiet-ignored true ] -t [ babelify ] ",
+        "static": "static",
+        "design": "design"
+    },
+    "dependencies": {
+        "autoprefixer": "^8.0.0",
+        "browser-sync": "^2.18.13",
+        "node-sass": "^4.5.3",
+        "npm-run-all": "^4.1.1",
+        "onchange": "^3.3.0",
+        "postcss": "^6.0.10",
+        "postcss-cli": "^5.0.0",
+        "postcss-pxtorem": "^4.0.1",
+        "rimraf": "^2.6.2"
+    },
+    "engines": {
+        "node": ">=8.6.0"
+    },
+    "postcss": {
+        "plugins": {
+            "autoprefixer": {
+                "browsers": [
+                    "last 3 versions",
+                    "ie >= 11"
+                ]
+            },
+            "postcss-pxtorem": {
+                "rootValue": "18",
+                "replace": false,
+                "propList": ["font", "font-size", "line-height", "letter-spacing"],
+                "selectorBlackList": [
+                    ":before",
+                    ":after",
+                    "::before",
+                    "::after"
+                ]
+            }
+        }
+    }
+}

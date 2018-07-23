@@ -1,9 +1,21 @@
 version: '2.3'
 
 services:
+    frontend:
+        build:
+            context: .
+            target: frontend
+        volumes:
+            - './design:/opt/frontend/design'
+            - './mywebapp/static:/opt/frontend/static'
+            - './package.json:/opt/frontend/package.json'
+            - './yarn.lock:/opt/frontend/yarn.lock'
+        command: npm run watch
 
     backend:
-        build: .
+        build:
+            context: .
+            target: backend
         init: true
         command: ./manage.py runserver 0.0.0.0:8000
         ports:
