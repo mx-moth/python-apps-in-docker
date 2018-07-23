@@ -1,0 +1,401 @@
+section.slide.slide__title
+	h1 🐍 + 🐋
+	h2 Python and Docker
+
+
+section.slide.slide__big
+	header.slide--header: h1 Tim Heap
+	.slide--body
+		p
+			i.fab.fa-twitter
+			=" "
+			a(href="https://twitter.com/tim_heap") @tim_heap
+		p
+			i.fab.fa-github
+			=" "
+			a(href="https://github.com/timheap") @timheap
+		p
+			i.fas.fa-link
+			=" "
+			a(href="https://timheap.me/") timheap.me
+		p
+			i.far.fa-envelope
+			=" "
+			a(href="mailto://tim@timheap.me") tim@timheap.me
+		p
+			i.fas.fa-briefcase
+			=" "
+			a(href="https://www.tidetech.org/") tidetech.org
+
+
+section.slide.slide__big
+	header.slide--header: h1= 'What is Docker?'
+	.slide--body
+		p.center
+			img.bullet(src="img/docker-logo.png", style="max-height: 3em;")
+		ul
+			li.bullet= 'Deterministic application images'
+			li.bullet= 'Isolated execution environment'
+			li.bullet= 'Composable containers'
+		.fin.bullet
+
+
+section.slide
+	header.slide--header: h1= 'Dockerfile'
+	.slide--body
+		p= 'A script for constructing a docker image'
+		pre.code-block.highlight.dockerfile
+			| FROM debian:stretch
+			| RUN apt install -y python3
+			|
+			| COPY requirements.txt /my-app/requirements.txt
+			| RUN pip3 install -r /my-app/requirements.txt
+			|
+			| WORKDIR /my-app/
+			| CMD python3 script.py
+
+
+section.slide
+	header.slide--header: h1= 'docker-compose.yml'
+	.slide--body
+		p Compose multiple docker images to build your application infrastructure
+		pre.code-block.highlight.yaml
+			| version: '2.3'
+			| services:
+			|     application:
+			|         build: .
+			|         env:
+			|             DJANGO_SETTINGS_MODULE: "dev.settings"
+			|         ports:
+			|             - "80:8000"
+			|
+			|     database:
+			|         image: "postgres:10"
+			|
+			|     mail:
+			|         image: "djfarrelly/maildev:latest"
+			|         ports:
+			|             - "9000:80"
+
+
+section.slide.slide__title
+	h2
+		| 🐍
+		br
+		| Python application
+
+
+section.slide.slide__big
+	header.slide--header: h1 Python application
+	.slide--body
+		ul
+			li.bullet Built as normal, with some constraints
+			li.bullet Runs as a WSGI application
+			li.bullet Run behind a web server such as nginx
+
+
+mixin tree_section()
+	.columns.bullet
+		block
+mixin tree_files(cls)
+	.column.column__full-height-content
+		.file-tree.code-block(class=attributes.class || 'code-block__middle')
+			ul
+				block
+mixin tree_comments()
+	.column
+		block
+section.slide
+	header.slide--header: h1= "Project layout"
+	.slide--body.slide--body__nopadding
+		+tree_section()
+			+tree_comments()
+			+tree_files().code-block__top
+				li README.rst
+				li.spacer
+		+tree_section()
+			+tree_comments()
+				p Project code is in a single module.
+			+tree_files()
+				li
+					span.py mywebapp/
+					ul
+						li: span.py __init__.py
+		+tree_section()
+			+tree_comments()
+				p This module can have submodules for different parts of the application.
+			+tree_files()
+				li
+					ul
+						li: span.py blog/
+						li: span.py contact/
+						li: span.py templates/
+						li: span.py models.py
+		+tree_section()
+			+tree_comments()
+				p This module also contains the main settings file and the WSGI application.
+			+tree_files()
+				li
+					ul
+						li: span.py wsgi.py
+						li: span.py settings.py
+						li: span.py ...
+		+tree_section()
+			+tree_comments()
+				p You do have tests, right...?
+			+tree_files()
+				li
+					span.py tests/
+					ul
+						li: span.py ...
+		+tree_section()
+			+tree_comments()
+				p Any extra python files needed for your application.
+			+tree_files()
+				li: span.py manage.py
+				li: span.py requirements.txt
+				li: span.py setup.cfg
+				li.spacer
+		+tree_section()
+			+tree_comments()
+				p Each environment has its own directory for configuration.
+			+tree_files()
+				li
+					span develop/
+					ul
+						li: span.py settings.py
+		+tree_section()
+			+tree_comments()
+				p
+					| This environment is for running as a normal Docker image,
+					| whether it is in production or staging.
+			+tree_files()
+				li
+					span deploy/
+					ul
+						li: span.py settings.py
+		+tree_section()
+			+tree_comments()
+				p
+					| <code>run.sh</code> will start the application, as well
+					| as running any upgrade scripts required.
+			+tree_files()
+				li
+					ul
+						li: span.docker run.sh
+						li: span.docker uwsgi.ini
+		+tree_section()
+			+tree_comments()
+				p Docker configuration
+			+tree_files().code-block__bottom
+				li: span.docker Dockerfile
+				li: span.docker docker-compose.yml
+
+
+section.slide.slide__big
+	header.slide--header: h1 Configuration
+	.slide--body
+		ul
+			li.bullet One configuration file in the project module
+			li.bullet One configuration file for development
+			li.bullet One configuration file for production
+			li.bullet Select which configuration to run using environment variables
+
+
+section.slide
+	header.slide--header: h1 Configuration
+	.slide--body
+		p Development configuration, mostly hard coded.
+		pre.code-block.highlight.python
+			| from dj_database_url import parse
+			| from mywebapp.settings import *
+			|
+			| ALLOWED_HOSTS = ['localhost', '*']
+			| SECRET_KEY = 'super secret shhhhh'
+			| DEBUG = True
+			|
+			| DATABASES = {'default': parse('postgres://postgres@database/postgres')}
+			|
+			| MEDIA_ROOT = '/opt/my-web-app/data/media/'
+			|
+			| EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+			| EMAIL_HOST = 'mail'
+			| EMAIL_PORT = 25
+
+
+section.slide
+	header.slide--header: h1 Configuration
+	.slide--body
+		p Production configuration, mostly from environment variables.
+		pre.code-block.highlight.python
+			| import os
+			| from dj_database_url import parse
+			| from mywebapp.settings import *
+			|
+			| HOSTNAME = os.environ['DJANGO_HOSTNAME']
+			| PROTOCOL = os.environ['DJANGO_PROTOCOL']
+			|
+			| ALLOWED_HOSTS = [HOSTNAME]
+			| SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+			| DEBUG = bool(int(os.environ['DJANGO_DEBUG']))
+			|
+			| DATABASES = {'default': parse(os.environ['DATABASE_URL'])}
+			|
+			| EMAIL_BACKEND = 'django_ses.SESBackend'
+			| SERVER_EMAIL = DEFAULT_FROM_EMAIL = os.environ['DJANGO_FROM_EMAIL']
+
+
+section.slide.slide__title
+	h2
+		| 🐋
+		br
+		| Docker container
+
+
+mixin code_bullet(lang)
+	pre.bullet.highlight.dockerfile.code-block(class=lang + ' ' + (attributes.class || 'code-block__middle'))
+		block
+section.slide
+	header.slide--header: h1 Dockerfile
+	.slide--body
+		+code_bullet('dockerfile').code-block__top
+			| FROM python:3.7-stretch
+			|
+		+code_bullet('dockerfile')
+			| WORKDIR /opt/my-web-app/
+			|
+		+code_bullet('dockerfile')
+			| RUN apt-get update \
+			|     && apt install \
+			|         --no-install-recommends --yes \
+			|         build-essential libpq-dev \
+			|     && true
+			|
+		+code_bullet('dockerfile')
+			| COPY requirements.txt /tmp/requirements.txt
+			| RUN pip3 install --no-cache-dir -r /tmp/requirements.txt \
+			|     && rm /tmp/requirements.txt \
+			|     && true
+			|
+		+code_bullet('dockerfile')
+			| COPY ./mywebapp /opt/my-web-app/mywebapp
+			| COPY ./deploy /opt/my-web-app/deploy
+			| COPY ./manage.py /opt/my-web-app/manage.py
+			|
+		+code_bullet('dockerfile')
+			| ENV PYTHONUNBUFFERED=1 \
+			|     PYTHONIOENCODING=UTF-8 \
+			|     PYTHONDONTWRITEBYTECODE=1 \
+			|     DJANGO_SETTINGS_MODULE=deploy.settings
+			|
+		+code_bullet('dockerfile').code-block__bottom
+			| EXPOSE 80
+			| ENTRYPOINT ["/dev/init", "--"]
+			| CMD ["/opt/backend/deploy/run.sh"]
+
+
+section.slide
+	header.slide--header: h1 docker-compose.yml
+	.slide--body
+		+code_bullet('yaml').code-block__top
+			| version: '2.3'
+			|
+			| services:
+		+code_bullet('yaml')
+			|     backend:
+			|         build: .
+			|         command: ./manage.py runserver 0.0.0.0:8000
+		+code_bullet('yaml')
+			|         ports:
+			|             - '80:8000'
+		+code_bullet('yaml')
+			|         volumes:
+			|             - '.:/opt/my-web-app'
+		+code_bullet('yaml')
+			|         environment:
+			|             - 'DJANGO_SETTINGS_MODULE=dev.settings'
+		+code_bullet('yaml')
+			|         depends_on:
+			|             - database
+		+code_bullet('yaml')
+			|     database:
+			|         image: postgres
+		+code_bullet('yaml')
+			|     memcached:
+			|         image: memcached
+		+code_bullet('yaml').code-block__bottom
+			|     mail:
+			|         image: djfarrelly/maildev
+			|         ports:
+			|             - "9000:80"
+
+
+section.slide
+	header.slide--header: h1 run.sh
+	.slide--body
+		+code_bullet('bash').code-block__top
+			| #!/bin/bash
+		+code_bullet('bash')
+			| # Run upgrade in the background
+			| function upgrade() {
+			|     ./manage.py migrate
+			|     ./manage.py collectstatic
+			| }
+			| upgrade &
+		+code_bullet('bash').code-block__bottom
+			| # Start uwsgi
+			| exec /usr/sbin/uwsgi \
+			|     --master \
+			|     --processes 2 \
+			|     --plugins python3 \
+			|     --die-on-term \
+			|     --uwsgi-socket 0.0.0.0:80 \
+			|     --chdir /opt/my-web-app \
+			|     --module mywebapp.wsgi:application
+
+
+section.slide.slide__big
+	header.slide--header: h1 Demo
+	.slide--body
+		p
+			i.fab.fa-github
+			=" "
+			a(href="https://github.com/timheap/python-apps-in-docker")
+				| github.com/timheap/python-apps-in-docker
+
+
+
+section.slide
+	header.slide--header: h1 Links
+	.slide--body
+		ul
+			li
+				| Code for the slides and examples:
+				br
+				i.fab.fa-github
+				=" "
+				a(target="_blank" href="https://github.com/timheap/python-apps-in-docker")
+					| github.com/timheap/python-apps-in-docker
+		ul
+			li
+				i.fab.fa-twitter
+				=" "
+				a(href="https://twitter.com/tim_heap") @tim_heap
+		ul
+			li
+				i.fab.fa-github
+				=" "
+				a(href="https://github.com/timheap") @timheap
+		ul
+			li
+				i.fas.fa-link
+				=" "
+				a(href="https://timheap.me/") timheap.me
+		ul
+			li
+				i.far.fa-envelope
+				=" "
+				a(href="mailto://tim@timheap.me") tim@timheap.me
+
+
+	// vim: syntax=jade

@@ -1,0 +1,18 @@
+version: '2.3'
+
+services:
+    frontend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+
+        volumes:
+            - './src:/app/src'
+            - './build:/app/build'
+            - './package.json:/app/package.json'
+            - './yarn.lock:/app/yarn.lock'
+
+        command: npm run develop
+
+        ports:
+            - "80:80"

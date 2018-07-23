@@ -1,0 +1,42 @@
+/*
+ * Global element styles
+ */
+
+*, ::before, ::after {
+	box-sizing: border-box;
+}
+
+body, html {
+	padding: 0px;
+	margin: 0px;
+}
+
+a {
+	text-decoration: none;
+	color: red;
+}
+
+:root {
+	font-family: $font-body, sans-serif;
+	font-size: 2.5rem;
+}
+pre, code, tt {
+	font-family: $font-monospace;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: $font-heading;
+	font-weight: normal;
+	font-style: normal;
+}
+p, pre, ul, ol {
+	margin: 0;
+	margin-bottom: $padding-rhythm;
+}
+ul {
+	margin-left: 1.5em;
+	padding-left: 0;
+}
+
+.center {
+	text-align: center;
+}

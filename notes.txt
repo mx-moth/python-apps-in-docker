@@ -1,0 +1,30 @@
+What to talk about:
+
+- What is docker?
+    - A way of building reproducible images that run an application in an isolated environment
+    - Can run multiple isolated services on one host
+    - Can hook services up together to make one larger application
+    - Intro on specifics:
+        - Dockerfile
+        - docker-compose
+- How to structure your Python application
+- Python-specific Dockerfile
+    - requirements.txt
+    - Where to put things
+    - Useful environment variables
+    - dev folder, deploy folder
+- Extra services you might want to run with docker-compose.yml
+    - Database
+    - Memcached
+    - Mail
+    - Celery / rabbitmq
+        - Reuse backend image, different command
+- Building frontend assets using a multistage build
+- Automated testing and building
+- Deploying
+    - Dockerfile CMD, ENTRYPOINT
+    - Running migrations, collect static, etc
+    - uwsgi
+    - nginx
+        - Share static files with nginx host
+- Done
