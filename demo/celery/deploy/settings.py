@@ -13,3 +13,5 @@ DATABASES = {'default': parse(os.environ['DATABASE_URL'])}
 ADMINS = ['errors@timheap.me']
 
 STATIC_ROOT = os.environ['DJANGO_STATIC_ROOT']
+
+CELERY_BROKER_URL = os.environ['CELERY_BROKER_URL']

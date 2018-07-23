@@ -15,3 +15,9 @@
     <input type="text" name="todo" placeholder="Create todo...">
     <input type="submit" value="Create">
 </form>
+
+<p>
+	<a href="{% url 'send_test_email' %}">Email my todo list to me</a>.
+	Check the <a href="http://localhost:9000" target="_blank">mail server</a>
+	for the output.
+</p>

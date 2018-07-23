@@ -1,4 +1,4 @@
-FROM python:3.7-stretch
+FROM python:3.7-stretch AS django
 
 WORKDIR /opt/my-web-app/
 
@@ -23,3 +23,6 @@ ENV PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=deploy.settings
 
 CMD ["/opt/my-web-app/deploy/run.sh"]
+
+FROM django AS celery
+CMD ["celery", "-A", "mywebapp", "worker", "--loglevel=info"]
