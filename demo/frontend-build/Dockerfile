@@ -13,8 +13,8 @@ COPY ./design/ /opt/frontend/design/
 RUN yarn run build
 CMD ["yarn", "run", "watch"]
 
-# Backend application
-FROM python:3.7-stretch AS backend
+# Django application
+FROM python:3.7-stretch AS django
 
 WORKDIR /opt/my-web-app/
 

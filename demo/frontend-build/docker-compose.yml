@@ -12,10 +12,10 @@ services:
             - './yarn.lock:/opt/frontend/yarn.lock'
         command: npm run watch
 
-    backend:
+    django:
         build:
             context: .
-            target: backend
+            target: django
         init: true
         command: ./manage.py runserver 0.0.0.0:8000
         ports:
@@ -23,14 +23,10 @@ services:
         volumes:
             - '.:/opt/my-web-app'
         environment:
-            - 'DJANGO_SETTINGS_MODULE=develop.settings'
+            DJANGO_SETTINGS_MODULE: 'develop.settings'
+            DATABASE_URL: 'postgres://postgres@database/postgres'
         depends_on:
             - database
 
     database:
         image: postgres
-
-    mail:
-        image: djfarrelly/maildev
-        ports:
-            - "9000:80"
